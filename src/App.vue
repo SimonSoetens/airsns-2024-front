@@ -5,7 +5,7 @@
       <nav>
         <button @click="currentView = 'HomePage'">Home</button>
         <button @click="currentView = 'LoginPage'">Login</button>
-        <button @click="currentView = 'CampingSpots'">Camping Spots</button>
+        <button @click="currentView = 'CampingSpotsPage'">Camping Spots</button>
         <button @click="currentView = 'ProfilePage'">Profile</button>
       </nav>
     </header>
@@ -31,7 +31,7 @@ export default {
   },
   data() {
     return {
-      currentView: 'Homepage', // Standaard component
+      currentView: 'HomePage', // Standaard component
     };
   },
 };

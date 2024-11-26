@@ -39,7 +39,7 @@
       </div>
       <div>
         <label>Geboortedatum:</label>
-        <input v-model="birth_date" type="date" placeholder="Geboortedatum" required />
+        <input v-model="date_of_birth" type="date" placeholder="Geboortedatum" required />
       </div>
       <div>
         <label>Land:</label>
@@ -70,7 +70,7 @@ export default {
       name: '',
       firstname: '',
       phone: '',
-      birth_date: '',
+      date_of_birth: '',
       country: '', // Geselecteerd land
       countrySearch: '', // Zoekveld voor landen
 
@@ -290,7 +290,7 @@ export default {
           firstname: this.firstname,
           email: this.email,
           phone: this.phone,
-          birth_date: this.birth_date,
+          date_of_birth: this.date_of_birth,
           country: this.country,
         }),
       })
