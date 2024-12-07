@@ -1,59 +1,58 @@
 <template>
-  <div>
-    <h2 v-if="isLogin">Login</h2>
-    <h2 v-else>Account aanmaken</h2>
+  <div id="login-page">
+    <h1>Login of Registreren</h1>
 
+    <!-- Navigatieknoppen -->
     <nav>
-      <button @click="isLogin = true">Login</button>
-      <button @click="isLogin = false">Registreren</button>
+      <button @click="currentView = 'login'">Inloggen</button>
+      <button @click="currentView = 'register'">Registreren</button>
     </nav>
 
-    <!-- Login Form -->
-    <form v-if="isLogin" @submit.prevent="login">
-      <div>
-        <input v-model="email" type="email" placeholder="E-mail" required />
-      </div>
-      <div>
-        <input v-model="password" type="password" placeholder="Wachtwoord" required />
-      </div>
-      <button type="submit">Inloggen</button>
-    </form>
+    <!-- Weergave voor inloggen -->
+    <div v-if="currentView === 'login'">
+      <h2>Inloggen</h2>
+      <form @submit.prevent="login">
+        <label for="email">E-mail:</label>
+        <input id="email" v-model="email" type="email" placeholder="E-mail" required />
 
-    <!-- Registration Form -->
-    <form v-else @submit.prevent="register">
-      <div>
-        <label>Naam:</label>
-        <input v-model="name" placeholder="Naam" required />
-      </div>
-      <div>
-        <label>Voornaam:</label>
-        <input v-model="firstname" placeholder="Voornaam" required />
-      </div>
-      <div>
-        <label>E-mail:</label>
-        <input v-model="email" type="email" placeholder="E-mail" required />
-      </div>
-      <div>
-        <label>Telefoonnummer:</label>
-        <input v-model="phone" type="tel" placeholder="Telefoonnummer" required />
-      </div>
-      <div>
-        <label>Geboortedatum:</label>
-        <input v-model="date_of_birth" type="date" placeholder="Geboortedatum" required />
-      </div>
-      <div>
-        <label>Land:</label>
-        <div>
-          <input v-model="countrySearch" placeholder="Zoek je land..." />
-          <select v-model="country" required>
-            <option v-for="option in filteredCountries" :key="option" :value="option">
-              {{ option }}
-            </option>
-          </select>
-        </div>
-      </div>
-      <button type="submit">Registreren</button>
-    </form>
+        <label for="password">Wachtwoord:</label>
+        <input id="password" v-model="password" type="password" placeholder="Wachtwoord" required />
+
+        <button type="submit">Inloggen</button>
+      </form>
+    </div>
+
+    <!-- Weergave voor registreren -->
+    <div v-if="currentView === 'register'">
+      <h2>Registreren</h2>
+      <form @submit.prevent="register" class="register-form">
+        <label for="name">Naam:</label>
+        <input id="name" v-model="name" type="text" placeholder="Naam" required />
+
+        <label for="firstname">Voornaam:</label>
+        <input id="firstname" v-model="firstname" type="text" placeholder="Voornaam" required />
+
+        <label for="email-register">E-mail:</label>
+        <input id="email-register" v-model="email" type="email" placeholder="E-mail" required />
+
+        <label for="phone">Telefoonnummer:</label>
+        <input id="phone" v-model="phone" type="text" placeholder="Telefoonnummer" required />
+
+        <label for="date_of_birth">Geboortedatum:</label>
+        <input id="date_of_birth" v-model="date_of_birth" type="date" required />
+
+        <label for="country">Land:</label>
+        <input id="country" v-model="country" type="text" placeholder="Land" required />
+
+        <label for="password-register">Wachtwoord:</label>
+        <input id="password-register" v-model="password" type="password" placeholder="Wachtwoord" required />
+
+        <label for="confirmPassword">Herhaal Wachtwoord:</label>
+        <input id="confirmPassword" v-model="confirmPassword" type="password" placeholder="Herhaal Wachtwoord" required />
+
+        <button type="submit">Registreren</button>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -61,252 +60,113 @@
 export default {
   data() {
     return {
-      // Login data
-      isLogin: true,
-      email: '',
-      password: '',
-
-      // Registration data
-      name: '',
-      firstname: '',
-      phone: '',
-      date_of_birth: '',
-      country: '', // Geselecteerd land
-      countrySearch: '', // Zoekveld voor landen
-
-      // Lijst van landen
-      countries: [
-        "Afghanistan",
-        "Albania",
-        "Algeria",
-        "Andorra",
-        "Angola",
-        "Argentina",
-        "Armenia",
-        "Australia",
-        "Austria",
-        "Azerbaijan",
-        "Bahamas",
-        "Bahrain",
-        "Bangladesh",
-        "Barbados",
-        "Belarus",
-        "Belgium",
-        "Belize",
-        "Benin",
-        "Bhutan",
-        "Bolivia",
-        "Bosnia and Herzegovina",
-        "Botswana",
-        "Brazil",
-        "Brunei",
-        "Bulgaria",
-        "Burkina Faso",
-        "Burundi",
-        "Cabo Verde",
-        "Cambodia",
-        "Cameroon",
-        "Canada",
-        "Central African Republic",
-        "Chad",
-        "Chile",
-        "China",
-        "Colombia",
-        "Comoros",
-        "Congo (Congo-Brazzaville)",
-        "Costa Rica",
-        "Croatia",
-        "Cuba",
-        "Cyprus",
-        "Czechia",
-        "Denmark",
-        "Djibouti",
-        "Dominica",
-        "Dominican Republic",
-        "Ecuador",
-        "Egypt",
-        "El Salvador",
-        "Equatorial Guinea",
-        "Eritrea",
-        "Estonia",
-        "Eswatini",
-        "Ethiopia",
-        "Fiji",
-        "Finland",
-        "France",
-        "Gabon",
-        "Gambia",
-        "Georgia",
-        "Germany",
-        "Ghana",
-        "Greece",
-        "Grenada",
-        "Guatemala",
-        "Guinea",
-        "Guinea-Bissau",
-        "Guyana",
-        "Haiti",
-        "Holy See",
-        "Honduras",
-        "Hungary",
-        "Iceland",
-        "India",
-        "Indonesia",
-        "Iran",
-        "Iraq",
-        "Ireland",
-        "Israel",
-        "Italy",
-        "Jamaica",
-        "Japan",
-        "Jordan",
-        "Kazakhstan",
-        "Kenya",
-        "Kiribati",
-        "Korea (North)",
-        "Korea (South)",
-        "Kosovo",
-        "Kuwait",
-        "Kyrgyzstan",
-        "Laos",
-        "Latvia",
-        "Lebanon",
-        "Lesotho",
-        "Liberia",
-        "Libya",
-        "Liechtenstein",
-        "Lithuania",
-        "Luxembourg",
-        "Madagascar",
-        "Malawi",
-        "Malaysia",
-        "Maldives",
-        "Mali",
-        "Malta",
-        "Marshall Islands",
-        "Mauritania",
-        "Mauritius",
-        "Mexico",
-        "Micronesia",
-        "Moldova",
-        "Monaco",
-        "Mongolia",
-        "Montenegro",
-        "Morocco",
-        "Mozambique",
-        "Myanmar",
-        "Namibia",
-        "Nauru",
-        "Nepal",
-        "Netherlands",
-        "New Zealand",
-        "Nicaragua",
-        "Niger",
-        "Nigeria",
-        "North Macedonia",
-        "Norway",
-        "Oman",
-        "Pakistan",
-        "Palau",
-        "Palestine State",
-        "Panama",
-        "Papua New Guinea",
-        "Paraguay",
-        "Peru",
-        "Philippines",
-        "Poland",
-        "Portugal",
-        "Qatar",
-        "Romania",
-        "Russia",
-        "Rwanda",
-        "Saint Kitts and Nevis",
-        "Saint Lucia",
-        "Saint Vincent and the Grenadines",
-        "Samoa",
-        "San Marino",
-        "Sao Tome and Principe",
-        "Saudi Arabia",
-        "Senegal",
-        "Serbia",
-        "Seychelles",
-        "Sierra Leone",
-        "Singapore",
-        "Slovakia",
-        "Slovenia",
-        "Solomon Islands",
-        "Somalia",
-        "South Africa",
-        "South Sudan",
-        "Spain",
-        "Sri Lanka",
-        "Sudan",
-        "Suriname",
-        "Sweden",
-        "Switzerland",
-        "Syria",
-        "Tajikistan",
-        "Tanzania",
-        "Thailand",
-        "Timor-Leste",
-        "Togo",
-        "Tonga",
-        "Trinidad and Tobago",
-        "Tunisia",
-        "Turkey",
-        "Turkmenistan",
-        "Tuvalu",
-        "Uganda",
-        "Ukraine",
-        "United Arab Emirates",
-        "United Kingdom",
-        "United States of America",
-        "Uruguay",
-        "Uzbekistan",
-        "Vanuatu",
-        "Venezuela",
-        "Vietnam",
-        "Yemen",
-        "Zambia",
-        "Zimbabwe",
-      ],
+      currentView: "login", // Startweergave
+      email: "",
+      password: "",
+      name: "",
+      firstname: "",
+      phone: "",
+      date_of_birth: "",
+      country: "",
+      confirmPassword: "",
     };
   },
-  computed: {
-    filteredCountries() {
-      if (!this.countrySearch) return this.countries;
-      return this.countries.filter((country) =>
-        country.toLowerCase().includes(this.countrySearch.toLowerCase())
-      );
-    },
-  },
   methods: {
-    register() {
-      fetch('http://localhost:3000/api/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: this.name,
-          firstname: this.firstname,
-          email: this.email,
-          phone: this.phone,
-          date_of_birth: this.date_of_birth,
-          country: this.country,
-        }),
+    login() {
+      // Stuur login-gegevens naar de server
+      const loginData = { email: this.email, password: this.password };
+      fetch("http://localhost:3000/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(loginData),
       })
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
-            alert('Succesvol geregistreerd! Log nu in.');
-            this.isLogin = true;
+            alert("Succesvol ingelogd!");
           } else {
-            alert('Registratie mislukt.');
+            alert("Fout bij inloggen: " + data.error);
           }
         })
-        .catch((err) => {
-          console.error('Fout bij registreren:', err);
-        });
+        .catch((err) => alert("Serverfout: " + err.message));
+    },
+    register() {
+      // Controleer of wachtwoorden overeenkomen
+      if (this.password !== this.confirmPassword) {
+        alert("Wachtwoorden komen niet overeen!");
+        return;
+      }
+
+      // Stuur registratiegegevens naar de server
+      const registerData = {
+        name: this.name,
+        firstname: this.firstname,
+        email: this.email,
+        phone: this.phone,
+        date_of_birth: this.date_of_birth,
+        country: this.country,
+        password: this.password,
+      };
+      fetch("http://localhost:3000/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(registerData),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            alert("Succesvol geregistreerd!");
+            this.currentView = "login"; // Schakel naar login na registratie
+          } else {
+            alert("Fout bij registreren: " + data.error);
+          }
+        })
+        .catch((err) => alert("Serverfout: " + err.message));
     },
   },
 };
 </script>
+
+<style>
+/* Styling voor de knoppen */
+nav button {
+  margin: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+/* Styling voor het formulier */
+form {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+form label {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+form input {
+  margin-top: 5px;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+form button {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: #45a049;
+}
+</style>
