@@ -11,7 +11,7 @@
     <!-- Weergave voor inloggen -->
     <div v-if="currentView === 'login'">
       <h2>Inloggen</h2>
-      <form @submit.prevent="login">
+      <form @submit.prevent="login" class="form-style">
         <label for="email">E-mail:</label>
         <input id="email" v-model="email" type="email" placeholder="E-mail" required />
 
@@ -25,7 +25,7 @@
     <!-- Weergave voor registreren -->
     <div v-if="currentView === 'register'">
       <h2>Registreren</h2>
-      <form @submit.prevent="register" class="register-form">
+      <form @submit.prevent="register" class="form-style">
         <label for="name">Naam:</label>
         <input id="name" v-model="name" type="text" placeholder="Naam" required />
 
@@ -42,7 +42,18 @@
         <input id="date_of_birth" v-model="date_of_birth" type="date" required />
 
         <label for="country">Land:</label>
-        <input id="country" v-model="country" type="text" placeholder="Land" required />
+        <input
+          id="country-search"
+          v-model="searchQuery"
+          type="text"
+          placeholder="Zoek land..."
+          @input="filterCountries"
+        />
+        <select id="country" v-model="country" required>
+          <option v-for="country in filteredCountries" :key="country" :value="country">
+            {{ country }}
+          </option>
+        </select>
 
         <label for="password-register">Wachtwoord:</label>
         <input id="password-register" v-model="password" type="password" placeholder="Wachtwoord" required />
@@ -53,11 +64,21 @@
         <button type="submit">Registreren</button>
       </form>
     </div>
+
+
+    <!-- Welcome Modal -->
+    <WelcomeModal :show="showWelcomeModal" @close="showWelcomeModal = false" />
   </div>
 </template>
 
 <script>
+import axios from "axios";
+import WelcomeModal from "@/components/WelcomeModal.vue";
+
 export default {
+  components: {
+    WelcomeModal,
+  },
   data() {
     return {
       currentView: "login", // Startweergave
@@ -69,104 +90,131 @@ export default {
       date_of_birth: "",
       country: "",
       confirmPassword: "",
+      searchQuery: "",
+      countries: [
+        "Afghanistan",
+        "Albania",
+        "Algeria",
+        "Andorra",
+        "Angola",
+        "Argentina",
+        "Armenia",
+        "Australia",
+        "Austria",
+        "Belgium",
+        "Brazil",
+        "Canada",
+        "China",
+        "France",
+        "Germany",
+        "India",
+        "Italy",
+        "Japan",
+        "Mexico",
+        "Netherlands",
+        "Norway",
+        "Pakistan",
+        "Russia",
+        "South Africa",
+        "Spain",
+        "Sweden",
+        "Switzerland",
+        "Turkey",
+        "United Kingdom",
+        "United States",
+      ],
+      filteredCountries: [],
+      showWelcomeModal: false, // Voor het modaal
     };
   },
+  mounted() {
+    this.filteredCountries = this.countries; // Standaard alle landen tonen
+  },
   methods: {
-    login() {
-      // Stuur login-gegevens naar de server
-      const loginData = { email: this.email, password: this.password };
-      fetch("http://localhost:3000/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(loginData),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.success) {
-            alert("Succesvol ingelogd!");
-          } else {
-            alert("Fout bij inloggen: " + data.error);
-          }
-        })
-        .catch((err) => alert("Serverfout: " + err.message));
+    filterCountries() {
+      const query = this.searchQuery.toLowerCase();
+      this.filteredCountries = this.countries.filter((country) =>
+        country.toLowerCase().includes(query)
+      );
     },
-    register() {
-      // Controleer of wachtwoorden overeenkomen
-      if (this.password !== this.confirmPassword) {
-        alert("Wachtwoorden komen niet overeen!");
-        return;
+    async register() {
+      try {
+        const response = await axios.post("http://localhost:3000/api/register", {
+          name: this.name,
+          firstname: this.firstname,
+          email: this.email,
+          phone: this.phone,
+          date_of_birth: this.date_of_birth,
+          country: this.country,
+          password: this.password,
+        });
+        if (response.data.success) {
+          alert("Registreren succesvol! Log nu in.");
+          this.currentView = "login"; // Schakel over naar de loginweergave
+        } else {
+          alert("Registreren mislukt: " + response.data.message);
+        }
+      } catch (error) {
+        console.error("Fout bij registreren:", error);
+        alert("Er is een fout opgetreden. Probeer het opnieuw.");
       }
-
-      // Stuur registratiegegevens naar de server
-      const registerData = {
-        name: this.name,
-        firstname: this.firstname,
-        email: this.email,
-        phone: this.phone,
-        date_of_birth: this.date_of_birth,
-        country: this.country,
-        password: this.password,
-      };
-      fetch("http://localhost:3000/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(registerData),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.success) {
-            alert("Succesvol geregistreerd!");
-            this.currentView = "login"; // Schakel naar login na registratie
-          } else {
-            alert("Fout bij registreren: " + data.error);
-          }
-        })
-        .catch((err) => alert("Serverfout: " + err.message));
+    },
+    async login() {
+      try {
+        const response = await axios.post("http://localhost:3000/api/login", {
+          email: this.email,
+          password: this.password,
+        });
+        if (response.data.success) {
+          localStorage.setItem("userId", response.data.userId); // Sla userId op
+          this.showWelcomeModal = true; // Toon het modaal
+        } else {
+          alert(response.data.message || "Inloggen mislukt. Controleer je gegevens.");
+        }
+        console.log("Modal status:", this.showWelcomeModal);
+      } catch (err) {
+        console.error("Fout bij inloggen:", err.response ? err.response.data : err);
+        alert("Er is een fout opgetreden bij het inloggen. Probeer het opnieuw.");
+      }
     },
   },
 };
 </script>
 
 <style>
-/* Styling voor de knoppen */
-nav button {
-  margin: 5px;
-  padding: 10px 20px;
-  cursor: pointer;
-}
-
-/* Styling voor het formulier */
-form {
+/* Styling om alles onder elkaar te houden */
+.form-style {
   display: flex;
   flex-direction: column;
+  gap: 10px;
   max-width: 400px;
   margin: 0 auto;
 }
 
-form label {
-  margin-top: 10px;
+label {
   font-weight: bold;
 }
 
-form input {
-  margin-top: 5px;
+input,
+select {
   padding: 8px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
-form button {
+button {
   margin-top: 15px;
   padding: 10px;
-  background-color: #4CAF50;
+  font-size: 16px;
+  background-color: #5c0a5c;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
 
-form button:hover {
-  background-color: #45a049;
+button:hover {
+  background-color: #901090;
 }
 </style>
