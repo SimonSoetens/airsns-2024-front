@@ -1,7 +1,5 @@
 <template>
   <div id="login-page">
-    <h1>Login of Registreren</h1>
-
     <!-- Navigatieknoppen -->
     <nav>
       <button @click="currentView = 'login'">Inloggen</button>
