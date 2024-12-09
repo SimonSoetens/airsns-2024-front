@@ -43,6 +43,9 @@
 
       <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
       <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+
+      <!-- Uitlogknop -->
+      <button class="logout-button" @click="logout">Uitloggen</button>
     </div>
     <div v-else>
       <p>Gebruikersinformatie wordt geladen...</p>
@@ -151,6 +154,10 @@ export default {
         this.errorMessage = "Je bent niet ingelogd.";
       }
     },
+    logout() {
+      localStorage.removeItem("userId"); // Verwijder userId uit localStorage
+      window.location.href = "/login"; // Verwijs naar de loginpagina
+    },
   },
 };
 </script>
@@ -194,6 +201,17 @@ button:hover {
 .cancel-button {
   max-width: 400px; /* Zorg ervoor dat beide knoppen even breed zijn */
   width: 100%; /* Gebruik de volledige breedte binnen de container */
+}
+
+.logout-button {
+  max-width: 400px; /* Zorg dat de uitlogknop dezelfde breedte heeft als andere knoppen */
+  width: 27%; /* Gebruik de volledige breedte */
+  margin-top: 20px;
+  background-color: #c9302c; /* Roodachtige kleur voor de uitlogknop */
+}
+
+.logout-button:hover {
+  background-color: #d9534f; /* Donkerdere roodachtige kleur bij hover */
 }
 
 .form-style {
