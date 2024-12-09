@@ -18,6 +18,11 @@
 
         <button type="submit">Inloggen</button>
       </form>
+
+      <!-- Succesbericht voor registreren -->
+      <p v-if="registrationSuccess" class="success-message">
+        Registreren succesvol, U kunt nu inloggen.
+      </p>
     </div>
 
     <!-- Weergave voor registreren -->
@@ -62,7 +67,6 @@
         <button type="submit">Registreren</button>
       </form>
     </div>
-
 
     <!-- Welcome Modal -->
     <WelcomeModal :show="showWelcomeModal" @close="showWelcomeModal = false" />
@@ -123,6 +127,7 @@ export default {
       ],
       filteredCountries: [],
       showWelcomeModal: false, // Voor het modaal
+      registrationSuccess: false, // Succesbericht na registreren
     };
   },
   mounted() {
@@ -147,7 +152,7 @@ export default {
           password: this.password,
         });
         if (response.data.success) {
-          alert("Registreren succesvol! Log nu in.");
+          this.registrationSuccess = true; // Toon succesbericht
           this.currentView = "login"; // Schakel over naar de loginweergave
         } else {
           alert("Registreren mislukt: " + response.data.message);
@@ -169,7 +174,6 @@ export default {
         } else {
           alert(response.data.message || "Inloggen mislukt. Controleer je gegevens.");
         }
-        console.log("Modal status:", this.showWelcomeModal);
       } catch (err) {
         console.error("Fout bij inloggen:", err.response ? err.response.data : err);
         alert("Er is een fout opgetreden bij het inloggen. Probeer het opnieuw.");
@@ -214,5 +218,12 @@ button {
 
 button:hover {
   background-color: #901090;
+}
+
+.success-message {
+  color: #28a745;
+  margin-top: 10px;
+  font-size: 14px;
+  text-align: center;
 }
 </style>
