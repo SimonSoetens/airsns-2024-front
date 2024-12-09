@@ -37,8 +37,8 @@
           </option>
         </select>
 
-        <button type="submit">Opslaan</button>
-        <button type="button" @click="cancelEdit">Annuleren</button>
+        <button type="submit" class="save-button">Opslaan</button>
+        <button type="button" @click="cancelEdit" class="cancel-button">Annuleren</button>
       </form>
 
       <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
@@ -183,11 +183,17 @@ button {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  text-align: left; /* Knoppen links uitlijnen */
+  text-align: center; /* Tekst in de knoppen centreren */
 }
 
 button:hover {
   background-color: #901090;
+}
+
+.save-button,
+.cancel-button {
+  max-width: 400px; /* Zorg ervoor dat beide knoppen even breed zijn */
+  width: 100%; /* Gebruik de volledige breedte binnen de container */
 }
 
 .form-style {
@@ -212,28 +218,6 @@ select {
   text-align: left; /* Tekst in de invoervelden links uitlijnen */
 }
 
-/* Specifieke aanpassing voor de Annuleren knop */
-button[type="button"] {
-  margin-top: 10px;
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #5c0a5c; /* Zelfde achtergrondkleur als de Opslaan knop */
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  text-align: center; /* Centraal uitlijnen van de tekst */
-  display: flex;
-  justify-content: center; /* Horizontaal centreren */
-  align-items: center; /* Verticaal centreren */
-  max-width: 400px; /* Zelfde breedte als de Opslaan knop */
-  width: 100%; /* Vul de beschikbare ruimte binnen de container */
-}
-
-button[type="button"]:hover {
-  background-color: #901090; /* Zelfde hover-effect als de Opslaan knop */
-}
-
 .success-message,
 .error-message {
   text-align: left; /* Zorg dat de berichten links uitgelijnd zijn */
@@ -249,5 +233,3 @@ button[type="button"]:hover {
   color: red;
 }
 </style>
-
-

@@ -16,13 +16,16 @@
         <label for="password">Wachtwoord:</label>
         <input id="password" v-model="password" type="password" placeholder="Wachtwoord" required />
 
-        <button type="submit">Inloggen</button>
+        <button type="submit" class="login-button">Inloggen</button>
       </form>
 
       <!-- Succesbericht voor registreren -->
       <p v-if="registrationSuccess" class="success-message">
         Registreren succesvol, U kunt nu inloggen.
       </p>
+
+      <!-- Foutmelding bij inloggen -->
+      <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
     </div>
 
     <!-- Weergave voor registreren -->
@@ -64,7 +67,7 @@
         <label for="confirmPassword">Herhaal Wachtwoord:</label>
         <input id="confirmPassword" v-model="confirmPassword" type="password" placeholder="Herhaal Wachtwoord" required />
 
-        <button type="submit">Registreren</button>
+        <button type="submit" class="register-button">Registreren</button>
       </form>
     </div>
 
@@ -127,6 +130,7 @@ export default {
       ],
       filteredCountries: [],
       showWelcomeModal: false, // Voor het modaal
+      errorMessage: "", // Foutmelding bij inloggen
       registrationSuccess: false, // Succesbericht na registreren
     };
   },
@@ -155,11 +159,11 @@ export default {
           this.registrationSuccess = true; // Toon succesbericht
           this.currentView = "login"; // Schakel over naar de loginweergave
         } else {
-          alert("Registreren mislukt: " + response.data.message);
+          this.errorMessage = "Registreren mislukt: " + response.data.message;
         }
       } catch (error) {
         console.error("Fout bij registreren:", error);
-        alert("Er is een fout opgetreden. Probeer het opnieuw.");
+        this.errorMessage = "Er is een fout opgetreden. Probeer het opnieuw.";
       }
     },
     async login() {
@@ -171,12 +175,13 @@ export default {
         if (response.data.success) {
           localStorage.setItem("userId", response.data.userId); // Sla userId op
           this.showWelcomeModal = true; // Toon het modaal
+          this.errorMessage = ""; // Verwijder foutmeldingen als inloggen lukt
         } else {
-          alert(response.data.message || "Inloggen mislukt. Controleer je gegevens.");
+          this.errorMessage = "Foutief wachtwoord, probeer opnieuw."; // Toon foutmelding
         }
       } catch (err) {
         console.error("Fout bij inloggen:", err.response ? err.response.data : err);
-        alert("Er is een fout opgetreden bij het inloggen. Probeer het opnieuw.");
+        this.errorMessage = "Er is een fout opgetreden bij het inloggen. Probeer het opnieuw.";
       }
     },
   },
@@ -203,15 +208,9 @@ select {
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  max-width: 400px; /* Zorgt voor consistentie met de profielpagina */
+  max-width: 400px;
   width: 100%; /* Vul de beschikbare ruimte binnen de container */
-  box-sizing: border-box; /* Houd padding mee in de breedteberekening */
-}
-
-/* Specifieke aanpassing voor het landen selectievak bij registratie */
-select {
-  max-width: 400px; /* Zelfde breedte als andere velden */
-  width: 100%;
+  box-sizing: border-box;
 }
 
 button {
@@ -223,26 +222,13 @@ button {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  text-align: center; /* Zorg dat de tekst in het midden van de knop staat */
-  box-sizing: border-box; /* Zorgt dat padding wordt meegerekend */
+  text-align: center;
 }
 
-/* Specifieke aanpassing voor de registreren knop */
-button[type="submit"] {
-  max-width: 400px; /* Zelfde breedte als de andere velden */
-  width: 100%; /* Vul de beschikbare ruimte binnen de container */
-  display: flex; /* Gebruik flexbox */
-  justify-content: center; /* Horizontaal centreren */
-  align-items: center; /* Verticaal centreren */
-}
-
-/* Specifieke aanpassing voor de inloggen knop */
-button[type="submit"]:first-child {
-  max-width: 400px; /* Zelfde breedte als andere velden */
-  width: 100%; /* Vul de beschikbare ruimte binnen de container */
-  display: flex; /* Gebruik flexbox */
-  justify-content: center; /* Horizontaal centreren */
-  align-items: center; /* Verticaal centreren */
+.login-button,
+.register-button {
+  max-width: 400px; /* Zelfde breedte als velden */
+  width: 100%;
 }
 
 button:hover {
@@ -255,9 +241,11 @@ button:hover {
   font-size: 14px;
   text-align: center;
 }
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
+  text-align: center;
+}
 </style>
-
-
-
-
-
