@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <header v-if="!ownerMode">
+    <header>
       <a @click="currentView = 'HomePage'" class="logo-link">
         <img src="@/assets/Logo.png" alt="AirSnS Logo" class="logo" />
       </a>
@@ -8,12 +8,13 @@
         <button @click="currentView = 'LoginPage'">Login</button>
         <button @click="currentView = 'CampingSpots'">Camping Spots</button>
         <button @click="currentView = 'ProfilePage'">Profile</button>
+        <!-- Extra knop voor Dashboard als eigenaar -->
+        <button v-if="ownerMode" @click="currentView = 'OwnerDashboard'">Dashboard</button>
       </nav>
     </header>
     <main>
-      <!-- Toon de juiste component op basis van de status -->
-      <component :is="currentView" v-if="!ownerMode" @setOwnerMode="setOwnerMode" />
-      <OwnerDashboard v-else />
+      <!-- Toon de juiste component -->
+      <component :is="currentView" @setOwnerMode="setOwnerMode" />
     </main>
   </div>
 </template>
@@ -35,21 +36,20 @@ export default {
   },
   data() {
     return {
-      currentView: 'HomePage', // Standaard component
+      currentView: 'HomePage',
       ownerMode: false, // Controle voor eigenaren
     };
   },
   methods: {
-    // Methode om over te schakelen naar eigenaarmodus
     setOwnerMode(value) {
-      this.ownerMode = value;
+      this.ownerMode = value; // Zet eigenaarmodus aan
     },
   },
 };
 </script>
 
 <style>
-/* Styling om de afbeelding en navigatie netjes weer te geven */
+/* Styling voor de app */
 header {
   display: flex;
   align-items: center;
@@ -61,7 +61,7 @@ header {
 }
 
 .logo {
-  height: 70px; /* Pas aan naar de gewenste grootte */
+  height: 70px;
   margin-right: 0px;
 }
 
@@ -78,6 +78,9 @@ nav button {
 
 nav button:hover {
   background-color: #901090;
-  color: white;
+}
+
+main {
+  padding: 20px;
 }
 </style>
