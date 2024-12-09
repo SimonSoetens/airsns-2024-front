@@ -189,7 +189,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-width: 400px;
+  max-width: 400px; /* Zorgt voor consistentie met de profielpagina */
   margin: 0 auto;
 }
 
@@ -203,6 +203,15 @@ select {
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  max-width: 400px; /* Zorgt voor consistentie met de profielpagina */
+  width: 100%; /* Vul de beschikbare ruimte binnen de container */
+  box-sizing: border-box; /* Houd padding mee in de breedteberekening */
+}
+
+/* Specifieke aanpassing voor het landen selectievak bij registratie */
+select {
+  max-width: 400px; /* Zelfde breedte als andere velden */
+  width: 100%;
 }
 
 button {
@@ -214,6 +223,26 @@ button {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  text-align: center; /* Zorg dat de tekst in het midden van de knop staat */
+  box-sizing: border-box; /* Zorgt dat padding wordt meegerekend */
+}
+
+/* Specifieke aanpassing voor de registreren knop */
+button[type="submit"] {
+  max-width: 400px; /* Zelfde breedte als de andere velden */
+  width: 100%; /* Vul de beschikbare ruimte binnen de container */
+  display: flex; /* Gebruik flexbox */
+  justify-content: center; /* Horizontaal centreren */
+  align-items: center; /* Verticaal centreren */
+}
+
+/* Specifieke aanpassing voor de inloggen knop */
+button[type="submit"]:first-child {
+  max-width: 400px; /* Zelfde breedte als andere velden */
+  width: 100%; /* Vul de beschikbare ruimte binnen de container */
+  display: flex; /* Gebruik flexbox */
+  justify-content: center; /* Horizontaal centreren */
+  align-items: center; /* Verticaal centreren */
 }
 
 button:hover {
@@ -227,3 +256,8 @@ button:hover {
   text-align: center;
 }
 </style>
+
+
+
+
+

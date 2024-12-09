@@ -2,7 +2,7 @@
   <div id="app">
     <header>
       <a @click="currentView = 'HomePage'" class="logo-link">
-        <img src="@/assets/Schermafbeelding 2024-12-08 003816.png" alt="AirSnS Logo" class="logo" />
+        <img src="@/assets/Logo.png" alt="AirSnS Logo" class="logo" />
       </a>
       <nav>
         <button @click="currentView = 'LoginPage'">Login</button>

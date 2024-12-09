@@ -2,7 +2,7 @@
   <div class="modal-overlay" v-if="show">
     <div class="modal">
       <div class="logo-container">
-        <img src="@/assets/Schermafbeelding 2024-12-08 003816.png" alt="AirSnS Logo" class="logo" />
+        <img src="@/assets/Logo.png" alt="AirSnS Logo" class="logo" />
       </div>
       <h2>Welkom bij AirSnS</h2>
       <p>Ontdek de mooiste kampeerplekken en bijzondere ervaringen over de hele wereld.</p>
