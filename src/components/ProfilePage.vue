@@ -211,7 +211,7 @@ button:hover {
 }
 
 .logout-button:hover {
-  background-color: #d9534f; /* Donkerdere roodachtige kleur bij hover */
+  background-color: #d9534f; /* Lichtere roodachtige kleur bij hover */
 }
 
 .form-style {

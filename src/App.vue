@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <header>
+    <header v-if="!ownerMode">
       <a @click="currentView = 'HomePage'" class="logo-link">
         <img src="@/assets/Logo.png" alt="AirSnS Logo" class="logo" />
       </a>
@@ -11,7 +11,9 @@
       </nav>
     </header>
     <main>
-      <component :is="currentView" />
+      <!-- Toon de juiste component op basis van de status -->
+      <component :is="currentView" v-if="!ownerMode" @setOwnerMode="setOwnerMode" />
+      <OwnerDashboard v-else />
     </main>
   </div>
 </template>
@@ -21,6 +23,7 @@ import HomePage from './components/HomePage.vue';
 import LoginPage from './components/LoginPage.vue';
 import CampingSpotsPage from './components/CampingSpotspage.vue';
 import ProfilePage from './components/ProfilePage.vue';
+import OwnerDashboard from './components/OwnerDashboard.vue';
 
 export default {
   components: {
@@ -28,11 +31,19 @@ export default {
     LoginPage,
     CampingSpotsPage,
     ProfilePage,
+    OwnerDashboard,
   },
   data() {
     return {
       currentView: 'HomePage', // Standaard component
+      ownerMode: false, // Controle voor eigenaren
     };
+  },
+  methods: {
+    // Methode om over te schakelen naar eigenaarmodus
+    setOwnerMode(value) {
+      this.ownerMode = value;
+    },
   },
 };
 </script>
