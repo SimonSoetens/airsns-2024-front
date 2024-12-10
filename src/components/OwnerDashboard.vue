@@ -140,31 +140,91 @@ export default {
 };
 </script>
 
-<style>
-/* Voeg hier de styling toe */
-.camping-list ul {
-  list-style: none;
-  padding: 0;
-}
-
-.camping-list li {
+<style scoped>
+/* Specifieke styling voor de modal in OwnerDashboard */
+#owner-dashboard .modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  border: 1px solid #ccc;
+  justify-content: center;
+  z-index: 1000; /* Zorg ervoor dat het boven andere content wordt weergegeven */
+}
+
+#owner-dashboard .modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  font-family: Arial, sans-serif;
+}
+
+#owner-dashboard form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#owner-dashboard input,
+#owner-dashboard textarea {
   padding: 10px;
-  margin-bottom: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.delete-button {
-  background: none;
+#owner-dashboard textarea {
+  resize: vertical;
+  height: 100px;
+}
+
+#owner-dashboard .save-button {
+  background-color: #5c0a5c;
+  color: white;
   border: none;
+  border-radius: 5px;
+  padding: 10px;
   cursor: pointer;
-  font-size: 18px;
-  color: red;
+  font-size: 16px;
 }
 
-.delete-button:hover {
-  color: darkred;
+#owner-dashboard .save-button:hover {
+  background-color: #901090;
+}
+
+#owner-dashboard .cancel-button {
+  background-color: #ccc;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#owner-dashboard .cancel-button:hover {
+  background-color: #999;
+}
+
+#owner-dashboard .success-message {
+  color: green;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+#owner-dashboard .error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
 }
 </style>
+
+
