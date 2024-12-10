@@ -6,7 +6,7 @@
       </a>
       <nav>
         <button @click="currentView = 'LoginPage'">Login</button>
-        <button @click="currentView = 'CampingSpots'">Camping Spots</button>
+        <button @click="currentView = 'CampingSpotspage'">Camping Spots</button>
         <button @click="currentView = 'ProfilePage'">Profile</button>
         <!-- Extra knop voor Dashboard als eigenaar -->
         <button v-if="ownerMode" @click="currentView = 'OwnerDashboard'">Dashboard</button>
@@ -22,7 +22,7 @@
 <script>
 import HomePage from './components/HomePage.vue';
 import LoginPage from './components/LoginPage.vue';
-import CampingSpotsPage from './components/CampingSpotspage.vue';
+import CampingSpotspage from './components/CampingSpotspage.vue';
 import ProfilePage from './components/ProfilePage.vue';
 import OwnerDashboard from './components/OwnerDashboard.vue';
 
@@ -30,7 +30,7 @@ export default {
   components: {
     HomePage,
     LoginPage,
-    CampingSpotsPage,
+    CampingSpotspage,
     ProfilePage,
     OwnerDashboard,
   },
