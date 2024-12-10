@@ -4,17 +4,23 @@
     <p>Dit is je dashboard waar je camping spots kunt beheren.</p>
     <button @click="showAddForm = true" class="add-button">Campingspot toevoegen</button>
 
-    <!-- Lijst met campingspots -->
-    <div v-if="campingSpots.length > 0" class="camping-list">
-      <h2>Jouw Campingspots</h2>
+    <!-- Lijst van campingspots -->
+    <div class="camping-list">
+      <h2>Mijn Campingspots</h2>
       <ul>
         <li v-for="spot in campingSpots" :key="spot.spot_id">
-          <h3>{{ spot.name }}</h3>
-          <p><strong>Locatie:</strong> {{ spot.location }}</p>
-          <p><strong>Beschrijving:</strong> {{ spot.description }}</p>
-          <p><strong>Prijs per nacht:</strong> €{{ spot.price }}</p>
+          <div class="spot-details">
+            <h3>{{ spot.name }}</h3>
+            <p><strong>Locatie:</strong> {{ spot.location }}</p>
+            <p><strong>Beschrijving:</strong> {{ spot.description }}</p>
+            <p><strong>Prijs per nacht:</strong> €{{ spot.price }}</p>
+          </div>
+          <button class="delete-button" @click="deleteCampingSpot(spot.spot_id)">
+            🗑️
+          </button>
         </li>
       </ul>
+      <p v-if="campingSpots.length === 0">Geen campingspots gevonden.</p>
     </div>
 
     <!-- Modaal venster voor het toevoegen van een campingspot -->
@@ -52,16 +58,19 @@ export default {
   data() {
     return {
       showAddForm: false, // Toont of verbergt het formulier
+      campingSpots: [], // Lijst met campingspots
       newCampingSpot: {
         name: "",
         location: "",
         description: "",
         price: null,
       },
-      campingSpots: [], // Lijst van campingspots
       errorMessage: "",
       successMessage: "",
     };
+  },
+  created() {
+    this.fetchCampingSpots();
   },
   methods: {
     async fetchCampingSpots() {
@@ -70,10 +79,11 @@ export default {
         if (response.data.success) {
           this.campingSpots = response.data.campingSpots;
         } else {
-          console.error("Fout bij het ophalen van campingspots:", response.data.message);
+          this.errorMessage = "Kon campingspots niet ophalen.";
         }
       } catch (error) {
         console.error("Fout bij het ophalen van campingspots:", error.response?.data || error.message);
+        this.errorMessage = "Er is een fout opgetreden bij het ophalen van campingspots.";
       }
     },
     async submitCampingSpot() {
@@ -86,21 +96,29 @@ export default {
         };
 
         const response = await axios.post("http://localhost:3000/api/campingspots", campingSpotData);
-
-        if (!this.newCampingSpot.name || !this.newCampingSpot.location || !this.newCampingSpot.description || !this.newCampingSpot.price) {
-          this.errorMessage = "Alle velden zijn verplicht!";
-          return;
-        }
-
         if (response.data.success) {
           this.successMessage = `Campingspot "${this.newCampingSpot.name}" is succesvol toegevoegd!`;
-          this.fetchCampingSpots(); // Lijst opnieuw ophalen na toevoegen
+          this.fetchCampingSpots(); // Herlaad de lijst
           this.closeForm();
         } else {
           this.errorMessage = `Fout bij het toevoegen van campingspot: ${response.data.message}`;
         }
       } catch (error) {
         console.error("Fout bij het toevoegen van campingspot:", error.response?.data || error.message);
+        this.errorMessage = "Er is een fout opgetreden. Probeer het opnieuw.";
+      }
+    },
+    async deleteCampingSpot(spotId) {
+      try {
+        const response = await axios.delete(`http://localhost:3000/api/campingspots/${spotId}`);
+        if (response.data.success) {
+          this.successMessage = "Campingspot succesvol verwijderd!";
+          this.fetchCampingSpots(); // Herlaad de lijst
+        } else {
+          this.errorMessage = "Kon campingspot niet verwijderen.";
+        }
+      } catch (error) {
+        console.error("Fout bij het verwijderen van campingspot:", error.response?.data || error.message);
         this.errorMessage = "Er is een fout opgetreden. Probeer het opnieuw.";
       }
     },
@@ -119,127 +137,34 @@ export default {
       this.successMessage = "";
     },
   },
-  mounted() {
-    this.fetchCampingSpots(); // Campingspots ophalen bij het laden van de pagina
-  },
 };
 </script>
 
 <style>
-#owner-dashboard {
-  padding: 20px;
-  font-family: Arial, sans-serif;
-}
-
-.add-button {
-  margin-top: 20px;
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #5c0a5c;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.add-button:hover {
-  background-color: #901090;
-}
-
-.camping-list {
-  margin-top: 20px;
-}
-
+/* Voeg hier de styling toe */
 .camping-list ul {
-  list-style-type: none;
+  list-style: none;
   padding: 0;
 }
 
 .camping-list li {
-  margin-bottom: 20px;
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-}
-
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-}
-
-.modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 400px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-input,
-textarea {
-  padding: 10px;
-  font-size: 16px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-textarea {
-  resize: vertical;
-  height: 100px;
-}
-
-.save-button {
-  background-color: #5c0a5c;
-  color: white;
-  border: none;
-  border-radius: 5px;
   padding: 10px;
-  cursor: pointer;
-  font-size: 16px;
+  margin-bottom: 10px;
 }
 
-.save-button:hover {
-  background-color: #901090;
-}
-
-.cancel-button {
-  background-color: #ccc;
-  color: black;
+.delete-button {
+  background: none;
   border: none;
-  border-radius: 5px;
-  padding: 10px;
   cursor: pointer;
-  font-size: 16px;
-}
-
-.cancel-button:hover {
-  background-color: #999;
-}
-
-.success-message {
-  color: green;
-  font-size: 14px;
-  margin-top: 10px;
-}
-
-.error-message {
+  font-size: 18px;
   color: red;
-  font-size: 14px;
-  margin-top: 10px;
+}
+
+.delete-button:hover {
+  color: darkred;
 }
 </style>
