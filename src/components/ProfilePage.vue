@@ -2,51 +2,77 @@
   <div id="profile-page">
     <h1>Profiel</h1>
     <div v-if="user">
-      <!-- Weergave modus -->
-      <div v-if="!editMode">
-        <p><strong>Naam:</strong> {{ user.name }}</p>
-        <p><strong>Voornaam:</strong> {{ user.firstname }}</p>
-        <p><strong>E-mail:</strong> {{ user.email }}</p>
-        <p><strong>Telefoonnummer:</strong> {{ user.phone }}</p>
-        <p><strong>Geboortedatum:</strong> {{ user.date_of_birth }}</p>
-        <p><strong>Land:</strong> {{ user.country }}</p>
-        <button @click="startEdit">Profiel bewerken</button>
+      <div class="tabs">
+        <button :class="{ active: activeTab === 'gegevens' }" @click="activeTab = 'gegevens'">
+          Gegevens
+        </button>
+        <button :class="{ active: activeTab === 'boekingen' }" @click="activeTab = 'boekingen'">
+          Mijn boekingen
+        </button>
       </div>
 
-      <!-- Bewerken profiel modus -->
-      <form v-else @submit.prevent="updateProfile" class="form-style">
-        <label for="name">Naam:</label>
-        <input id="name" v-model="user.name" type="text" required />
+      <!-- Tab Gegevens -->
+      <div v-if="activeTab === 'gegevens'">
+        <!-- Weergave modus -->
+        <div v-if="!editMode">
+          <p><strong>Naam:</strong> {{ user.name }}</p>
+          <p><strong>Voornaam:</strong> {{ user.firstname }}</p>
+          <p><strong>E-mail:</strong> {{ user.email }}</p>
+          <p><strong>Telefoonnummer:</strong> {{ user.phone }}</p>
+          <p><strong>Geboortedatum:</strong> {{ user.date_of_birth }}</p>
+          <p><strong>Land:</strong> {{ user.country }}</p>
+          <button @click="startEdit">Profiel bewerken</button>
+        </div>
 
-        <label for="firstname">Voornaam:</label>
-        <input id="firstname" v-model="user.firstname" type="text" required />
+        <!-- Bewerken profiel modus -->
+        <form v-else @submit.prevent="updateProfile" class="form-style">
+          <label for="name">Naam:</label>
+          <input id="name" v-model="user.name" type="text" required />
 
-        <label for="email">E-mail:</label>
-        <input id="email" v-model="user.email" type="email" required />
+          <label for="firstname">Voornaam:</label>
+          <input id="firstname" v-model="user.firstname" type="text" required />
 
-        <label for="phone">Telefoonnummer:</label>
-        <input id="phone" v-model="user.phone" type="text" required />
+          <label for="email">E-mail:</label>
+          <input id="email" v-model="user.email" type="email" required />
 
-        <label for="date_of_birth">Geboortedatum:</label>
-        <input id="date_of_birth" v-model="user.date_of_birth" type="date" required />
+          <label for="phone">Telefoonnummer:</label>
+          <input id="phone" v-model="user.phone" type="text" required />
 
-        <label for="country">Land:</label>
-        <select id="country" v-model="user.country" required>
-          <option v-for="country in countries" :key="country" :value="country">
-            {{ country }}
-          </option>
-        </select>
+          <label for="date_of_birth">Geboortedatum:</label>
+          <input id="date_of_birth" v-model="user.date_of_birth" type="date" required />
 
-        <button type="submit" class="save-button">Opslaan</button>
-        <button type="button" @click="cancelEdit" class="cancel-button">Annuleren</button>
-      </form>
+          <label for="country">Land:</label>
+          <select id="country" v-model="user.country" required>
+            <option v-for="country in countries" :key="country" :value="country">
+              {{ country }}
+            </option>
+          </select>
 
-      <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
-      <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+          <button type="submit" class="save-button">Opslaan</button>
+          <button type="button" @click="cancelEdit" class="cancel-button">Annuleren</button>
+        </form>
 
-      <!-- Uitlogknop -->
-      <button class="logout-button" @click="logout">Uitloggen</button>
+        <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
+        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+
+        <button class="logout-button" @click="logout">Uitloggen</button>
+      </div>
+
+      <!-- Tab Mijn Boekingen -->
+      <div v-if="activeTab === 'boekingen'">
+        <h2>Mijn Boekingen</h2>
+        <div v-if="bookings.length" class="bookings-container">
+          <div class="booking-card" v-for="booking in bookings" :key="booking.booking_id">
+            <h3>{{ booking.name }}</h3>
+            <p>{{ booking.description }}</p>
+            <p><strong>Locatie:</strong> {{ booking.location }}</p>
+            <p><strong>Prijs per nacht:</strong> €{{ booking.price }}</p>
+          </div>
+        </div>
+        <p v-else>Geen boekingen gevonden.</p>
+      </div>
     </div>
+
     <div v-else>
       <p>Gebruikersinformatie wordt geladen...</p>
     </div>
@@ -60,8 +86,10 @@ export default {
   data() {
     return {
       user: null,
-      originalUser: null, // Kopie van originele gegevens
+      originalUser: null,
       editMode: false,
+      activeTab: 'gegevens', // Active tab ('gegevens' or 'boekingen')
+      bookings: [], // Bookings array
       countries: [
         "Afghanistan",
         "Albania",
@@ -99,14 +127,16 @@ export default {
     };
   },
   mounted() {
-    const userId = localStorage.getItem("userId"); // Haal userId op uit localStorage
+    const userId = localStorage.getItem("userId");
+    console.log("Loaded userId from localStorage:", userId);
     if (userId) {
       axios
         .get(`http://localhost:3000/api/profile/${userId}`)
         .then((response) => {
+          console.log("Profile response:", response.data);
           if (response.data.success) {
             this.user = response.data.user;
-            this.originalUser = { ...this.user }; // Maak een kopie van de originele gegevens
+            this.originalUser = { ...this.user };
           } else {
             this.errorMessage = "Gebruikersinformatie niet gevonden.";
           }
@@ -115,31 +145,50 @@ export default {
           console.error("Fout bij ophalen gebruikersinformatie:", error);
           this.errorMessage = "Er is een fout opgetreden bij het laden van de gebruikersinformatie.";
         });
+
+      // Fetch bookings for the user
+      axios
+      .get(`http://localhost:3000/api/bookings/${userId}`)
+      .then((response) => {
+        console.log("Bookings response:", response.data); // Log de serverrespons
+        if (response.data.success) {
+          this.bookings = response.data.bookings;
+        } else {
+          console.error("Geen boekingen gevonden.");
+        }
+      })
+      .catch((error) => {
+        console.error("Fout bij ophalen boekingen:", error);
+      });
     } else {
       this.errorMessage = "Je bent niet ingelogd.";
     }
   },
   methods: {
     startEdit() {
+      console.log("Entering edit mode with user data:", this.user);
       this.editMode = true;
-      this.originalUser = { ...this.user }; // Sla de huidige gegevens op voordat je gaat bewerken
+      this.originalUser = { ...this.user };
     },
     cancelEdit() {
-      this.user = { ...this.originalUser }; // Herstel de originele gegevens
+      console.log("Cancelling edit. Restoring original user data:", this.originalUser);
+      this.user = { ...this.originalUser };
       this.editMode = false;
-      this.successMessage = ""; // Wis succesmelding
-      this.errorMessage = ""; // Wis foutmelding
+      this.successMessage = "";
+      this.errorMessage = "";
     },
     updateProfile() {
-      const userId = localStorage.getItem("userId"); // Haal userId op
+      const userId = localStorage.getItem("userId");
+      console.log("Updating profile for userId:", userId);
       if (userId) {
         axios
           .put(`http://localhost:3000/api/profile/${userId}`, this.user)
           .then((response) => {
+            console.log("Update profile response:", response.data);
             if (response.data.message === "User updated successfully") {
               this.successMessage = "Profiel succesvol bijgewerkt!";
               this.errorMessage = "";
-              this.editMode = false; // Schakel terug naar weergave modus
+              this.editMode = false;
             } else {
               this.successMessage = "";
               this.errorMessage = "Bijwerken mislukt. Probeer het opnieuw.";
@@ -155,8 +204,9 @@ export default {
       }
     },
     logout() {
-      localStorage.removeItem("userId"); // Verwijder userId uit localStorage
-      window.location.href = "/login"; // Verwijs naar de loginpagina
+      console.log("User logging out.");
+      localStorage.removeItem("userId");
+      window.location.href = "/login";
     },
   },
 };
@@ -165,20 +215,67 @@ export default {
 <style>
 #profile-page {
   max-width: 600px;
-  margin: 0; /* Zorg ervoor dat er geen centrale uitlijning is */
+  margin: 0 auto;
   font-family: Arial, sans-serif;
-  padding: 20px; /* Voeg een beetje padding toe voor ruimte aan de randen */
+  padding: 20px;
 }
 
-h1 {
-  text-align: left; /* Houd de titel links uitgelijnd */
+.tabs {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.tabs button {
+  flex: 1;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.tabs button.active {
+  background-color: #5c0a5c;
+  color: white;
+}
+
+.tabs button:hover {
+  background-color: #901090;
+  color: white;
+}
+
+.bookings-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+}
+
+.booking-card {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  width: 300px;
+  text-align: left;
+}
+
+.booking-card h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  color: #5c0a5c;
+}
+
+.booking-card p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #333;
 }
 
 p {
   font-size: 16px;
   line-height: 1.5;
-  margin: 10px 0;
-  text-align: left; /* Zorg ervoor dat de tekst links uitgelijnd is */
 }
 
 button {
@@ -190,64 +287,33 @@ button {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  text-align: center; /* Tekst in de knoppen centreren */
 }
 
 button:hover {
   background-color: #901090;
 }
 
-.save-button,
-.cancel-button {
-  max-width: 400px; /* Zorg ervoor dat beide knoppen even breed zijn */
-  width: 100%; /* Gebruik de volledige breedte binnen de container */
-}
-
-.logout-button {
-  max-width: 400px; /* Zorg dat de uitlogknop dezelfde breedte heeft als andere knoppen */
-  width: 27%; /* Gebruik de volledige breedte */
-  margin-top: 20px;
-  background-color: #c9302c; /* Roodachtige kleur voor de uitlogknop */
-}
-
-.logout-button:hover {
-  background-color: #d9534f; /* Lichtere roodachtige kleur bij hover */
-}
-
-.form-style {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-width: 100%; /* Gebruik de volledige breedte */
-  text-align: left; /* Links uitlijnen */
-}
-
-label {
-  font-weight: bold;
-  text-align: left; /* Labels links uitlijnen */
-}
-
-input,
-select {
-  padding: 8px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  text-align: left; /* Tekst in de invoervelden links uitlijnen */
-}
-
-.success-message,
-.error-message {
-  text-align: left; /* Zorg dat de berichten links uitgelijnd zijn */
-  margin-top: 20px;
-  font-weight: bold;
-}
-
 .success-message {
   color: green;
+  font-weight: bold;
 }
 
 .error-message {
   color: red;
+  font-weight: bold;
+}
+
+.save-button,
+.cancel-button {
+  max-width: 400px;
+  width: 100%;
+}
+
+.logout-button {
+  background-color: #c9302c;
+}
+
+.logout-button:hover {
+  background-color: #d9534f;
 }
 </style>

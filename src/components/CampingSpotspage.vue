@@ -5,7 +5,8 @@
       <div class="camping-spot" v-for="spot in campingSpots" :key="spot.spot_id">
         <h3>{{ spot.name }}</h3>
         <p>{{ spot.description }}</p>
-        <p><strong>Prijs:</strong> €{{ spot.price }}</p>
+        <p><strong>Locatie:</strong> {{ spot.location }}</p>
+        <p><strong>Prijs per nacht:</strong> €{{ spot.price }}</p>
         <button class="book-button" @click="bookSpot(spot.spot_id, spot.name)">Boeken</button>
       </div>
     </div>
