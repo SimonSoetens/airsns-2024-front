@@ -63,11 +63,12 @@
         <h2>Mijn Boekingen</h2>
         <div v-if="bookings.length" class="bookings-container">
           <div class="booking-card" v-for="booking in bookings" :key="booking.booking_id">
-            <h3>{{ booking.name }}</h3>
-            <p>{{ booking.description }}</p>
-            <p><strong>Locatie:</strong> {{ booking.location }}</p>
-            <p><strong>Prijs per nacht:</strong> €{{ booking.price }}</p>
+            <h3>{{ booking.name || 'Geen naam beschikbaar' }}</h3>
+            <p>{{ booking.description || 'Geen beschrijving beschikbaar' }}</p>
+            <p><strong>Prijs per nacht:</strong> €{{ booking.price || 'Onbekend' }}</p>
           </div>
+
+
         </div>
         <p v-else>Geen boekingen gevonden.</p>
       </div>
@@ -153,6 +154,7 @@ export default {
         console.log("Bookings response:", response.data); // Log de serverrespons
         if (response.data.success) {
           this.bookings = response.data.bookings;
+          console.log("Bookings ontvangen in frontend:", this.bookings);
         } else {
           console.error("Geen boekingen gevonden.");
         }
