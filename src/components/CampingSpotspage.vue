@@ -1,6 +1,6 @@
 <template>
   <div id="camping-spots-page">
-    <h2>Camping Spots</h2>
+    <h2>Kampeerplekken</h2>
 
     <!-- Filters -->
     <div class="filters">

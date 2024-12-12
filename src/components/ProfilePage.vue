@@ -75,7 +75,7 @@
     </div>
 
     <div v-else>
-      <p>Gebruikersinformatie wordt geladen...</p>
+      <p>U bent niet ingelogd</p>
     </div>
   </div>
 </template>

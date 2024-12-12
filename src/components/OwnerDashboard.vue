@@ -7,19 +7,18 @@
     <!-- Lijst van campingspots -->
     <div class="camping-list">
       <h2>Mijn Campingspots</h2>
-      <ul>
-        <li v-for="spot in campingSpots" :key="spot.spot_id">
-          <div class="spot-details">
-            <h3>{{ spot.name }}</h3>
-            <p><strong>Locatie:</strong> {{ spot.location }}</p>
-            <p><strong>Beschrijving:</strong> {{ spot.description }}</p>
-            <p><strong>Prijs per nacht:</strong> €{{ spot.price }}</p>
-          </div>
-          <button class="delete-button" @click="deleteCampingSpot(spot.spot_id)">
-            🗑️
-          </button>
-        </li>
-      </ul>
+      <div class="spacer"></div>
+      <div class="camping-card" v-for="spot in campingSpots" :key="spot.spot_id">
+        <div class="camping-details">
+          <h3>{{ spot.name }}</h3>
+          <p><strong>Omschrijving:</strong> {{ spot.description }}</p>
+          <p><strong>Locatie:</strong> {{ spot.location }}</p>
+          <p><strong>Prijs per nacht:</strong> €{{ spot.price }}</p>
+        </div>
+        <button class="delete-button" @click="deleteCampingSpot(spot.spot_id)">
+          🗑️
+        </button>
+      </div>
       <p v-if="campingSpots.length === 0">Geen campingspots gevonden.</p>
     </div>
 
@@ -50,6 +49,8 @@
   </div>
 </template>
 
+
+
 <script>
 import axios from "axios";
 
@@ -57,8 +58,8 @@ export default {
   name: "OwnerDashboard",
   data() {
     return {
-      showAddForm: false, // Toont of verbergt het formulier
-      campingSpots: [], // Lijst met campingspots
+      showAddForm: false,
+      campingSpots: [],
       newCampingSpot: {
         name: "",
         location: "",
@@ -98,7 +99,7 @@ export default {
         const response = await axios.post("http://localhost:3000/api/campingspots", campingSpotData);
         if (response.data.success) {
           this.successMessage = `Campingspot "${this.newCampingSpot.name}" is succesvol toegevoegd!`;
-          this.fetchCampingSpots(); // Herlaad de lijst
+          this.fetchCampingSpots();
           this.closeForm();
         } else {
           this.errorMessage = `Fout bij het toevoegen van campingspot: ${response.data.message}`;
@@ -113,7 +114,7 @@ export default {
         const response = await axios.delete(`http://localhost:3000/api/campingspots/${spotId}`);
         if (response.data.success) {
           this.successMessage = "Campingspot succesvol verwijderd!";
-          this.fetchCampingSpots(); // Herlaad de lijst
+          this.fetchCampingSpots();
         } else {
           this.errorMessage = "Kon campingspot niet verwijderen.";
         }
@@ -139,6 +140,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 /* Specifieke styling voor de modal in OwnerDashboard */
@@ -225,6 +227,63 @@ export default {
   font-size: 14px;
   margin-top: 10px;
 }
+
+.camping-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+h2 {
+  margin-bottom: 30px; /* Ruimte onder de "Mijn Campingspots"-titel */
+  font-size: 24px; /* Optioneel: Vergroot het lettertype voor visuele balans */
+}
+
+.camping-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 250px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  font-family: Arial, sans-serif;
+}
+
+.camping-details h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  color: #5c0a5c;
+}
+
+.camping-details p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.delete-button {
+  background-color: transparent;
+  border: none;
+  color: #5c0a5c;
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.spacer {
+ /* Ruimte tussen de titel en de lijst */
+  width: 100%;
+}
+
+.delete-button:hover {
+  color: #901090;
+}
+
 </style>
 
 

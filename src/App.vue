@@ -5,11 +5,10 @@
         <img src="@/assets/Logo.png" alt="AirSnS Logo" class="logo" />
       </a>
       <nav>
-        <button @click="currentView = 'LoginPage'">Login</button>
-        <button @click="currentView = 'CampingSpotspage'">Camping Spots</button>
-        <button @click="currentView = 'ProfilePage'">Profile</button>
-        <!-- Extra knop voor Dashboard als eigenaar -->
-        <button v-if="ownerMode" @click="currentView = 'OwnerDashboard'">Dashboard</button>
+        <button @click="currentView = 'LoginPage'">Inloggen</button>
+        <button @click="currentView = 'CampingSpotspage'">Kampeerplekken</button>
+        <button @click="currentView = 'ProfilePage'">Profiel</button>
+        <button v-if="ownerMode" @click="currentView = 'OwnerDashboard'">Beheren</button>
       </nav>
     </header>
     <main>
@@ -74,6 +73,14 @@ nav button {
   padding: 8px 15px;
   cursor: pointer;
   font-size: 14px;
+}
+
+body {
+  background-image: url('assets/Background.webp'); /* Vervang 'images/achtergrond.jpg' door het juiste pad naar je afbeelding */
+  background-size: cover; /* Zorgt ervoor dat de afbeelding de hele achtergrond bedekt */
+  background-position: center 100%; /* Centreert de afbeelding */
+  background-repeat: no-repeat; /* Voorkomt herhaling van de afbeelding */
+  background-attachment: fixed; /* Zorgt ervoor dat de achtergrond vaststaat bij scrollen */
 }
 
 nav button:hover {
