@@ -2,10 +2,10 @@
   <div class="modal-overlay" v-if="show">
     <div class="modal">
       <div class="logo-container">
-        <img src="@/assets/Logo.png" alt="AirSnS Logo" class="logo" />
+        <img src="@/assets/Logo.png" alt="AirSnS Logo" class="logo" /> <!--alt als afbeelding niet geladen kan worden of voor slechtzienden-->
       </div>
       <h2>Welkom bij AirSnS</h2>
-      <p>Ontdek de mooiste kampeerplekken en bijzondere ervaringen over de hele wereld.</p>
+      <p>Ontdek de mooiste kampeerplekken en bijzondere ervaringen in heel België.</p>
       <button @click="redirectToHome">Doorgaan</button>
     </div>
   </div>

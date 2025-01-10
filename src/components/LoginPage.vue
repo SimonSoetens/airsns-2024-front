@@ -9,7 +9,7 @@
     <!-- Weergave voor inloggen -->
     <div v-if="currentView === 'login'">
       <h2>Inloggen</h2>
-      <form @submit.prevent="login" class="form-style">
+      <form @submit.prevent="login" class="form-style"> <!-- @submit.prevent voorkomt standaardgedrag van formulier -->
         <label for="email">E-mail:</label>
         <input id="email" v-model="email" type="email" placeholder="E-mail" required />
 
@@ -98,40 +98,40 @@ export default {
       searchQuery: "",
       countries: [
         "Afghanistan",
-        "Albania",
-        "Algeria",
+        "Albanië",
+        "Algerije",
         "Andorra",
         "Angola",
-        "Argentina",
-        "Armenia",
-        "Australia",
-        "Austria",
-        "Belgium",
-        "Brazil",
+        "Argentinië",
+        "Armenië",
+        "Australië",
+        "Oostenrijk",
+        "België",
+        "Brazilië",
         "Canada",
         "China",
-        "France",
-        "Germany",
+        "Frankrijk",
+        "Duitsland",
         "India",
-        "Italy",
+        "Italië",
         "Japan",
         "Mexico",
-        "Netherlands",
-        "Norway",
+        "Nederland",
+        "Noorwegen",
         "Pakistan",
-        "Russia",
-        "South Africa",
-        "Spain",
-        "Sweden",
-        "Switzerland",
-        "Turkey",
-        "United Kingdom",
-        "United States",
+        "Rusland",
+        "Zuid-Afrika",
+        "Spanje",
+        "Zweden",
+        "Zwitserland",
+        "Turkije",
+        "Verenigd Koninkrijk",
+        "Verenigde Staten",
       ],
       filteredCountries: [],
-      showWelcomeModal: false, // Voor het modaal
-      registrationSuccess: false, // Succesbericht na registreren
-      errorMessage: "", // Voor foutmeldingen
+      showWelcomeModal: false, 
+      registrationSuccess: false, 
+      errorMessage: "", 
     };
   },
   mounted() {
@@ -233,13 +233,13 @@ button {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  text-align: center; /* Zorg dat de tekst in het midden van de knop staat */
+  text-align: center; 
   box-sizing: border-box; /* Zorgt dat padding wordt meegerekend */
 }
 
 button[type="submit"] {
-  max-width: 400px; /* Zelfde breedte als de andere velden */
-  width: 100%; /* Vul de beschikbare ruimte binnen de container */
+  max-width: 400px; 
+  width: 100%; 
 }
 
 button:hover {

@@ -5,10 +5,10 @@
     <!-- Filters -->
     <div class="filters">
       <label for="location-filter">Locatie:</label>
-      <select id="location-filter" v-model="filters.location">
+      <select id="location-filter" v-model="filters.location"> <!-- Als filters verandert, past dropdown vanzelf aan -->
         <option value="">Alle locaties</option>
         <option v-for="location in uniqueLocations" :key="location" :value="location">
-          {{ location }}
+          {{ location }} <!-- Daadwerkelijke naam in dropdown menu weergeven -->
         </option>
       </select>
 
@@ -76,12 +76,12 @@ export default {
   },
   computed: {
   uniqueLocations() {
-    return [...new Set(this.campingSpots.map((spot) => spot.location))];
+    return [...new Set(this.campingSpots.map((spot) => spot.location))]; // Haalt locatie van elke spot op en zet set om naar array
   },
 },
   mounted() {
     fetch('http://localhost:3000/api/campingspots')
-      .then((res) => res.json())
+      .then((res) => res.json()) //API data omzetten naar JSON zodat het bruikbaar is
       .then((data) => {
         this.campingSpots = data.campingSpots || [];
         this.filteredCampingSpots = this.campingSpots; // Zet standaardwaarde
@@ -92,9 +92,9 @@ export default {
   },
   methods: {
     applyFilters() {
-      this.filteredCampingSpots = this.campingSpots.filter((spot) => {
+      this.filteredCampingSpots = this.campingSpots.filter((spot) => { //Door alle spots gaan, kijken of ze voldoen aan de filters
         const matchesLocation =
-          !this.filters.location ||
+          !this.filters.location || // Als er geen locatie is ingevuld, alle spots tonen
           spot.location
             .toLowerCase()
             .includes(this.filters.location.toLowerCase());
@@ -120,11 +120,11 @@ export default {
       try {
         const response = await fetch('http://localhost:3000/api/bookings', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId, spotId }),
+          headers: { 'Content-Type': 'application/json' }, // Verzonden data is JSON formaat
+          body: JSON.stringify({ userId, spotId }), // Daadwerkelijke data omgezet in string zodat server begrijpt
         });
 
-        const data = await response.json();
+        const data = await response.json(); // Reactie van server omzetten naar JSON
         if (data.success) {
           this.showPopup = true;
           this.popupMessage = `Campingspot "${spotName}" is succesvol geboekt!`;

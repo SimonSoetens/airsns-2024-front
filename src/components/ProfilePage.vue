@@ -61,8 +61,8 @@
       <!-- Tab Mijn Boekingen -->
       <div v-if="activeTab === 'boekingen'">
         <h2>Mijn Boekingen</h2>
-        <div v-if="bookings.length" class="bookings-container">
-          <div class="booking-card" v-for="booking in bookings" :key="booking.booking_id">
+        <div v-if="bookings.length" class="bookings-container"> 
+          <div class="booking-card" v-for="booking in bookings" :key="booking.booking_id"> 
             <h3>{{ booking.name || 'Geen naam beschikbaar' }}</h3>
             <p>{{ booking.description || 'Geen beschrijving beschikbaar' }}</p>
             <p><strong>Prijs per nacht:</strong> €{{ booking.price || 'Onbekend' }}</p>
@@ -89,39 +89,39 @@ export default {
       user: null,
       originalUser: null,
       editMode: false,
-      activeTab: 'gegevens', // Active tab ('gegevens' or 'boekingen')
-      bookings: [], // Bookings array
+      activeTab: 'gegevens', 
+      bookings: [], 
       countries: [
         "Afghanistan",
-        "Albania",
-        "Algeria",
+        "Albanië",
+        "Algerije",
         "Andorra",
         "Angola",
-        "Argentina",
-        "Armenia",
-        "Australia",
-        "Austria",
-        "Belgium",
-        "Brazil",
+        "Argentinië",
+        "Armenië",
+        "Australië",
+        "Oostenrijk",
+        "België",
+        "Brazilië",
         "Canada",
         "China",
-        "France",
-        "Germany",
+        "Frankrijk",
+        "Duitsland",
         "India",
-        "Italy",
+        "Italië",
         "Japan",
         "Mexico",
-        "Netherlands",
-        "Norway",
+        "Nederland",
+        "Noorwegen",
         "Pakistan",
-        "Russia",
-        "South Africa",
-        "Spain",
-        "Sweden",
-        "Switzerland",
-        "Turkey",
-        "United Kingdom",
-        "United States",
+        "Rusland",
+        "Zuid-Afrika",
+        "Spanje",
+        "Zweden",
+        "Zwitserland",
+        "Turkije",
+        "Verenigd Koninkrijk",
+        "Verenigde Staten",
       ],
       successMessage: "",
       errorMessage: "",
@@ -150,10 +150,10 @@ export default {
       // Fetch bookings for the user
       axios
       .get(`http://localhost:3000/api/bookings/${userId}`)
-      .then((response) => {
-        console.log("Bookings response:", response.data); // Log de serverrespons
-        if (response.data.success) {
-          this.bookings = response.data.bookings;
+      .then((response) => { //als verzoek succesvol (server stuurt response terug)
+        console.log("Bookings response:", response.data); 
+        if (response.data.success) { 
+          this.bookings = response.data.bookings; //lijst van boekingen opslagen in Vue-component
           console.log("Bookings ontvangen in frontend:", this.bookings);
         } else {
           console.error("Geen boekingen gevonden.");
@@ -208,7 +208,7 @@ export default {
     logout() {
       console.log("User logging out.");
       localStorage.removeItem("userId");
-      window.location.href = "/login";
+      window.location.href = "/";
     },
   },
 };

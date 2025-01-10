@@ -71,7 +71,7 @@ export default {
     };
   },
   created() {
-    this.fetchCampingSpots();
+    this.fetchCampingSpots(); // Haal campingspots op bij het laden van de pagina
   },
   methods: {
     async fetchCampingSpots() {
@@ -90,7 +90,7 @@ export default {
     async submitCampingSpot() {
       try {
         const campingSpotData = {
-          name: this.newCampingSpot.name || null,
+          name: this.newCampingSpot.name || null, //Lege waarden omzetten naar null, voorkomt fouten in db
           location: this.newCampingSpot.location || null,
           description: this.newCampingSpot.description || null,
           price: this.newCampingSpot.price || null,
@@ -150,7 +150,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0);
   display: flex;
   align-items: center;
   justify-content: center;

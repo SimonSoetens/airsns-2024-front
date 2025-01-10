@@ -12,7 +12,6 @@
       </nav>
     </header>
     <main>
-      <!-- Toon de juiste component -->
       <component :is="currentView" @setOwnerMode="setOwnerMode" />
     </main>
   </div>
@@ -76,11 +75,11 @@ nav button {
 }
 
 body {
-  background-image: url('assets/Background.webp'); /* Vervang 'images/achtergrond.jpg' door het juiste pad naar je afbeelding */
+  background-image: url('assets/Background.webp'); 
   background-size: cover; /* Zorgt ervoor dat de afbeelding de hele achtergrond bedekt */
-  background-position: center 100%; /* Centreert de afbeelding */
+  background-position: center 100%; 
   background-repeat: no-repeat; /* Voorkomt herhaling van de afbeelding */
-  background-attachment: fixed; /* Zorgt ervoor dat de achtergrond vaststaat bij scrollen */
+  background-attachment: fixed; 
 }
 
 nav button:hover {
